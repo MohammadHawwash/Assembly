@@ -1,0 +1,55 @@
+INCLUDE inout.asm
+
+.model  small,c
+
+.486   
+	  
+.STACK   2000
+
+.DATA
+
+;________________________________________________
+    
+.CODE
+
+.STARTUP
+
+        MOV  AH, 0h
+		
+		MOV  AL,3+128
+		
+		INT 10h
+		
+		MOV   CX,80*25
+		
+		XOR   DI,DI
+		
+		MOV  AX,0b800h
+		
+		MOV  ES,AX
+		
+FIRST :
+
+    	MOV  AX,ES:[DI]
+
+		CMP  AL,' '
+		
+		JNE  SEC 
+		
+		MOV AL,'@'
+
+    	MOV ES:[DI],AX 
+		 
+		JMP SEC
+		
+SEC:	
+
+        ADD DI ,2 
+		 
+   		LOOP FIRST
+		
+;________________________________________________		
+		
+		.EXIT
+		
+		END

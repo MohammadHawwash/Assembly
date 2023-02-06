@@ -1,0 +1,65 @@
+include inout.asm
+
+.MODEL small,c
+
+.486
+
+.STACK 200
+
+.DATA
+
+STRX DB 300 Dup (?)
+ 
+.code
+ 
+     main : mov Ax,@DATA
+	 
+	        mov DS,Ax
+			
+			call endl
+			
+			call gets,offset STRX
+			
+			XOR BX,BX
+			
+			mov si,offset STRX
+			
+		FIRST:
+		
+            mov AL,[si]
+			
+			CMP AL,"$"
+			
+			JE Done
+			
+            cmp Al,"A"
+			
+			JL M1
+			
+			cmp AL,"Z"
+			
+			JG M1
+			
+			inc BX
+			
+			inc SI
+			
+			JMP FIRST
+			
+			M1:
+			
+			inc SI
+			
+			JMP FIRST
+			
+			Done:
+			
+			call putint,BX
+			
+            mov AH , 04CH
+			
+            mov Al,0
+			
+            INT 21H
+			
+            end main

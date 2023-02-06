@@ -1,0 +1,69 @@
+INCLUDE inout.asm
+
+.MODEL  small,c
+
+.486
+
+.STACK    2000
+
+;_______________________________________________
+
+.DATA
+
+       MSG    DB 13,10,"ENTER TNE NUM PLZ : $"
+	   
+	   SAVE  DW ?
+
+;______________________________________________ 
+  
+.CODE
+
+             .STARTUP
+			 
+			   CALL ENDL
+			   
+			   CALL  PUTS,OFFSET MSG
+			   
+			   CALL  GETINT
+			   
+			   MOV   SAVE,AX
+			   
+			   MOV   BX,10
+			   
+			   XOR   CX,CX
+			   
+			   MOV   AX,SAVE
+
+AGAIN:	
+
+;______________________________________________
+
+
+         	   CWD
+
+			   DIV   BX
+			   
+			   PUSH  DX
+			   
+			   INC   CX
+			   
+			   OR    AX,AX
+			   
+			   JNZ   AGAIN
+			   
+;______________________________________________
+
+			   
+NEXT:
+
+ 	   	       POP   DX
+			   
+			   CALL  PUTINT ,DX
+			   
+			   CALL  ENDL
+			   
+			   LOOP  NEXT
+			   
+			   .EXIT
+			   
+END

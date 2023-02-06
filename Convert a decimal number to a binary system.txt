@@ -1,0 +1,68 @@
+INCLUDE inout.asm
+
+.MODEL SMALL,C
+
+.486
+
+.STACK 1000
+
+;___________________________________________________
+;___________________________________________________
+
+.DATA
+
+A  dw  10
+
+.code
+
+.STARTUP
+			
+ call getint
+ 
+ MOV A,AX
+ 
+ XOR CX,CX
+ 
+ FIRST :  SHR AX,1
+ 
+          JNC SECONDE
+		  
+	      JC THIRD
+	   
+	  ;/////////////////////////////
+	  
+ SECONDE  :  MOV BX,0
+ 
+             PUSH BX
+			 
+             INC CX
+			 
+             OR AX,AX
+			 
+	         JNZ FIRST
+			 
+	  ;/////////////////////////////	 
+	  
+ THIRD :  MOV BX,1
+ 
+          PUSH BX
+		  
+          INC CX
+		  
+          OR AX,AX
+		  
+          JNZ FIRST
+		  
+	  ;/////////////////////////////
+	  
+FOURTH : POP BX
+
+	  CALL PUTINT, BX
+	  
+	  LOOP FOURTH
+
+		.EXIT
+
+END
+
+; (:

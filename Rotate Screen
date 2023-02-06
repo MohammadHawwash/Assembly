@@ -1,0 +1,180 @@
+include inout.asm
+
+.model  SMALL,c
+
+.486
+
+.STACK  2000
+
+.DATA
+  
+;__________________________________________________________
+;__________________________________________________________ 
+  
+.CODE
+
+ PROC   SLOW_DOWN
+ 
+	        LOCALS
+			
+         	USES CX 
+	
+			MOV CX,30000 
+			
+			@@0100:
+			
+			NOP
+			
+			LOOP @@0100
+	
+	         RET
+			 
+     SLOW_DOWN    ENDP
+
+
+
+   PROC    ROTAT     H:WORD     
+	
+	        USES  
+			
+        	LOCALS
+			
+			MOV     CX,80
+			
+			MOV     BX,0b800h
+			
+			MOV     ES,BX
+			
+			XOR 	AX,AX
+			
+			MOV 	AX,H
+
+			IMUL	AX,160
+
+			SUB 	AX,160
+
+			MOV     SI,AX
+
+			XOR     AX,AX
+
+			MOV     AX,H
+
+			IMUL    AX,160
+
+			DEC     AX
+
+			DEC     AX
+
+			MOV     DI,AX
+
+			PUSH    DS
+
+			MOV     BX,0b800h
+
+			MOV     DS,BX
+
+	@@200:
+
+	        MOV  AX ,DS:[SI]
+			
+            ADD SI ,2
+			
+            MOV ES:[DI],AX
+			
+		    ADD DI,2
+ 
+			MOV AX ,0
+
+			MOV 	AX,H
+
+			IMUL 	AX,160
+
+			CMP 	DI,AX
+
+			JL 		@@500
+
+			MOV     AX ,0
+
+			MOV 	AX,H 
+
+			IMUL 	AX,160
+
+			SUB 	AX,160
+
+			MOV     DI,AX
+
+	
+
+	@@500:    
+
+			MOV     AX ,0
+
+			MOV		AX,H
+
+			IMUL 	AX,160
+
+			CMP 	SI,AX
+
+			JL 		@@400
+
+			XOR 	AX,AX
+
+			MOV 	AX,H
+
+			IMUL 	AX,160
+
+			SUB 	AX,160
+
+			MOV     SI,AX
+
+	@@400:
+
+			LOOP @@200
+					
+			POP	 DS
+	
+
+	            RET
+
+    ROTAT       ENDP
+	
+;__________________________________________________________
+;__________________________________________________________	
+
+.STARTUP
+
+MOV     AH,0h
+
+MOV     AL,3+128
+
+INT     10h
+
+MOV DX ,1
+
+XOR BX ,BX 
+
+LP:
+
+call rotat  , DX 
+
+inc BX 
+
+ADD DX,1 
+
+CMP BX ,25 
+
+JE FF
+
+JMP LP
+
+FF:
+
+MOV DX ,1 
+
+MOV BX ,0
+
+JMP LP
+
+.EXIT 
+
+END
